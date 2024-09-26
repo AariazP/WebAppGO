@@ -87,7 +87,7 @@ func obtenerImagenesAleatorias(directorio string, cantidad int) []string {
 
     var imagenes []string
     for _, file := range files {
-        if !file.IsDir() {
+        if !file.IsDir() && esImagen(file.Name()) {
             imagenes = append(imagenes, file.Name())
         }
     }
@@ -104,4 +104,15 @@ func obtenerImagenesAleatorias(directorio string, cantidad int) []string {
     }
 
     return imagenes
+}
+
+// esImagen verifica si el nombre de un archivo tiene una extensión de imagen válida
+func esImagen(nombre string) bool {
+    extensiones := []string{".jpg", ".jpeg", ".png", ".gif"}
+    for _, ext := range extensiones {
+        if filepath.Ext(nombre) == ext {
+            return true
+        }
+    }
+    return false
 }
