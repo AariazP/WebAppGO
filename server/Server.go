@@ -11,9 +11,9 @@ import (
 )
 
 type PageVariables struct {
-    Hostname string
+    Hostname  string
     Categoria string
-    Imagenes []string
+    Imagenes  []string
 }
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 }
 
 func IniciarServidor(port string) {
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         // Obtener el nombre del host
@@ -45,17 +45,23 @@ func IniciarServidor(port string) {
         categoria := categorias[rand.Intn(len(categorias))]
 
         // Obtener imágenes aleatorias de la categoría
-        imagenes := obtenerImagenesAleatorias(filepath.Join("static", categoria), 6)
-		fmt.Println(imagenes)
+        imagenes := obtenerImagenesAleatorias(filepath.Join("static", categoria), 4)
+
         // Preparar los datos para la plantilla
         data := PageVariables{
-            Hostname: hostname,
+            Hostname:  hostname,
             Categoria: categoria,
-            Imagenes: imagenes,
+            Imagenes:  imagenes,
         }
 
-        // Cargar la plantilla
-        tmpl, err := template.ParseFiles("static/index.html")
+        // Seleccionar plantilla aleatoriamente
+        plantilla := "static/index.html"
+        if rand.Intn(2) == 1 {
+            plantilla = "static/index2.html"
+        }
+
+        // Cargar la plantilla seleccionada
+        tmpl, err := template.ParseFiles(plantilla)
         if err != nil {
             fmt.Println("Error al cargar la plantilla:", err)
             http.Error(w, "Internal Server Error", http.StatusInternalServerError)
