@@ -26,28 +26,34 @@
             padding: 0; 
         }
         img {
-            box-shadow: 0 0 10px rgba(136, 136, 136, 0.2);
+            filter: drop-shadow(0 0 10px rgba(136, 136, 136, 0.5)); /* Sombra con el color y la opacidad deseados */
             margin-bottom: 0px; 
+            display: block;
         }
         img:hover {
             transform: scale(1.1);
             transition: 0.5s;
         }
-        .gallery{
-
+        .gallery {
             max-width: 800px;
             max-height: 600px;
             justify-content: center;
             align-items: center;
         }
-        h1{
-            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        h1 {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
-        .hostname, .categoria{
+        .hostname {
             color: white;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             margin-top: 50px;
             margin-bottom: 50px;
+        }
+        .categoria {
+            color: white;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -55,20 +61,32 @@
     <nav class="navbar bg-dark border-bottom border-body d-flex justify-content-center align-items-center" data-bs-theme="dark" style="height: 100px;">
         <h1 class="text-white">José Alejandro Arias Pinzón</h1>
     </nav>
+    
     <h3 class="text-center hostname"><strong>Hostname:</strong> {{.Hostname}}</h3>
-    <h2 class="text-center categoria"><strong>Hostname:</strong> {{.Categoria}}</h2>
+    <h2 class="text-center categoria"><strong>Categoría:</strong> {{.Categoria}}</h2>
+    
     <div class="container mt-4 gallery">
         <div class="row">
             {{range .Imagenes}}
             <div class="col-lg-4 col-md-4 mb-4 col-sm-6">
-                <img src="./{{.}}" class="w-100 shadow-1-strong rounded" alt="Imagen" />
+                <img src="../static/{{$.Categoria}}/{{.}}" class="w-100 shadow-1-strong rounded" 
+                data-random-color="{{.}}"    alt="Imagen de la galería" />
             </div>
             {{end}}
         </div>
+        {{if eq (len .Imagenes) 0}}
+        <p class="text-white text-center">No hay imágenes disponibles en esta categoría.</p>
+        {{end}}
     </div>
-    {{if eq (len .Imagenes) 0}}
-        <h4 class="text-center text-white">No hay imágenes disponibles en la categoría {{.Categoria}}.</h4>
-    {{end}}
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('img[data-random-color]');
+            images.forEach(img => {
+                // Generar un color aleatorio
+                const randomColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.5)`;
+                img.style.filter = `drop-shadow(0 0 7px ${randomColor})`;
+            });
+        });
+    </script>
 </body>
 </html>
